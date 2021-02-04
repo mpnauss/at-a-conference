@@ -30,9 +30,26 @@ class Conference {
         let alreadyScheduled = this.sessions.find((session) => {
             return session.title === newSession.title
         })
-        if (!alreadyScheduled) {
+        let checkAttendees = this.attendees.find((person) => {
+            return person.email === newSession._facilitator.email
+        })
+        let checkSessionTimes = this.sessions.forEach((session) => {
+            if(newSession._startTime >= session._startTime 
+                && newSession._startTime < session._endTime) {
+                return false
+            } else {
+                return true
+            }
+        })
+        if (!alreadyScheduled && checkAttendees && checkSessionTimes) {
             this.sessions.push(newSession)
+            return true
+        } else {
+            return false
         }
+    }
+    sortSessions() {
+        this.sessions.sort((a, b) => a._startTime - b._startTime)
     }
     registrationOpen() {
          if (this.numberOfRegistered < this._maxRegistrants) {
